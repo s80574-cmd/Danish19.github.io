@@ -6,8 +6,7 @@
     <style>
         .case-study-card {
             display: grid;
-            /* Updated to 4 columns to accommodate the new content and button */
-            grid-template-columns: 1fr 1fr 1fr 1fr; 
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 20px;
             background: #ffffff;
             padding: 30px;
@@ -56,14 +55,8 @@
             transform: translateY(-2px);
         }
 
-        /* Responsive adjustment for tablets and smaller screens */
-        @media (max-width: 992px) {
-            .case-study-card {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
+        /* Responsive adjustment */
+        @media (max-width: 768px) {
             .case-study-card {
                 grid-template-columns: 1fr;
                 text-align: center;
@@ -84,17 +77,13 @@
             <p>A Focus Timer featuring a "Study Buddy" pet that reacts to your progress and a built-in task manager.</p>
         </div>
 
-        <div class="column">
-            <h3>Live Demo</h3>
-            <p>Experience the interactive features and local storage capabilities directly in your browser.</p>
-        </div>
-
         <div class="column" style="text-align: center;">
-            <a href="https://github.com/s80574-cmd/Danish19.github.io" class="app-link-btn" target="_blank">
+            <a href="https://s80574-cmd.github.io/focus-timer-app/app.html" class="app-link-btn" target="_blank">
                 Try My Focus Timer App
             </a>
         </div>
     </div>
 
 </body>
+
 </html>
