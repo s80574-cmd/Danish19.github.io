@@ -6,7 +6,8 @@
     <style>
         .case-study-card {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            /* Updated to 4 columns to accommodate the new button column */
+            grid-template-columns: 1fr 1fr 1fr 1fr; 
             gap: 20px;
             background: #ffffff;
             padding: 30px;
@@ -22,21 +23,21 @@
 
         .column h3 {
             margin-top: 0;
-            color: #5d576b;
-            font-size: 1.2rem;
+            color: #5d576b; /* Matches --text-color from app.html */
+            font-size: 1.1rem;
         }
 
         .column p {
             color: #777;
             line-height: 1.6;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         /* Styled Button with Hover Effect */
         .app-link-btn {
             display: inline-block;
             padding: 14px 22px;
-            background-color: #b8c0ff; /* Matches --accent-soft */
+            background-color: #b8c0ff; /* Matches --accent-soft from app.html */
             color: white;
             text-decoration: none;
             border-radius: 15px;
@@ -46,7 +47,7 @@
         }
 
         .app-link-btn:hover {
-            background-color: #97a2ff; /* Matches --button-hover */
+            background-color: #97a2ff; /* Matches --button-hover from app.html */
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(151, 162, 255, 0.5);
         }
@@ -55,8 +56,14 @@
             transform: translateY(-2px);
         }
 
-        /* Responsive adjustment */
-        @media (max-width: 768px) {
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .case-study-card {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
             .case-study-card {
                 grid-template-columns: 1fr;
                 text-align: center;
@@ -77,13 +84,17 @@
             <p>A Focus Timer featuring a "Study Buddy" pet that reacts to your progress and a built-in task manager.</p>
         </div>
 
+        <div class="column">
+            <h3>Key Features</h3>
+            <p>Includes Pomodoro intervals, a dynamic mood pet, and local storage to keep your tasks saved between sessions.</p>
+        </div>
+
         <div class="column" style="text-align: center;">
-            <a href="https://s80574-cmd.github.io/focus-timer-app/app.html" class="app-link-btn" target="_blank">
+            <a href="https://github.com/s80574-cmd/Danish19.github.io" class="app-link-btn" target="_blank">
                 Try My Focus Timer App
             </a>
         </div>
     </div>
 
 </body>
-
 </html>
