@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Companion | Lofi Study Buddy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0e4fb;
+            --card-bg: #ffffff;
+            --text-color: #5d576b;
+            --accent-soft: #b8c0ff;
+            --accent-warm: #ffd6ff;
+            --button-hover: #97a2ff;
+            --border-color: #eee;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            background-image: linear-gradient(135deg, #f0e4fb 0%, #d7e3fc 100%);
+            font-family: 'Varela Round', sans-serif;
+            color: var(--text-color);
+        }
+
+        .container {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            width: 350px;
+        }
+
+        #pet-display {
+            font-size: 80px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .pulse {
+            animation: breathing 3s ease-in-out infinite;
+        }
+
+        @keyframes breathing {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--text-color);
+        }
+
+        .status-text {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        button {
+            border: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Varela Round', sans-serif;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            background: var(--accent-soft);
+            color: white;
+        }
+
+        button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        #reset-btn, #clear-btn {
+            background: var(--accent-warm);
+            color: var(--text-color);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* To Do List Styling */
+        .todo-section {
+            border-top: 2px solid var(--border-color);
+            padding-top: 20px;
+            text-align: left;
+        }
+
+        .todo-input-group {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--bg-color);
+            border-radius: 10px;
+            font-family: 'Varela Round', sans-serif;
+            outline: none;
+        }
+
+        #todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .todo-item {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s;
+            border-radius: 8px;
+        }
+
+        .todo-item:hover {
+            background: #fdfbff;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .list-footer {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://s80574-cmd.github.io/Danish19.github.io" style="position:absolute; top:20px; left:20px; text-decoration: none; color: inherit; font-size: 0.9rem;">← Back to Home</a>
+
+    <div class="container">
+        <div id="status" class="status-text">Zzz... Sleeping</div>
+        <div id="pet-display">😴</div>
+        <div id="timer-display">25:00</div>
+        
+        <div class="controls">
+            <button id="start-btn" onclick="startTimer()">Start</button>
+            <button id="pause-btn" onclick="pauseTimer()" disabled>Pause</button>
+            <button id="reset-btn" onclick="resetTimer()">Reset</button>
+        </div>
+
+        <div class="todo-section">
+            <div class="todo-input-group">
+                <input type="text" id="todo-input" placeholder="Add a task...">
+                <button onclick="addTodo()">Add</button>
+            </div>
+            <ul id="todo-list"></ul>
+            <div class="list-footer">
+                <button id="clear-btn" style="font-size: 0.7rem; padding: 5px 10px;" onclick="clearTodos()">Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="finish-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+    <script>
+        // Timer Logic
+        let timeLeft = 25 * 60;
+        let timerInterval = null;
+        
+        const petDisplay = document.getElementById('pet-display');
+        const timerDisplay = document.getElementById('timer-display');
+        const statusText = document.getElementById('status');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const finishSound = document.getElementById('finish-sound');
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (timerInterval) return;
+            petDisplay.textContent = '😎';
+            petDisplay.classList.add('pulse');
+            statusText.textContent = 'Stay Focused!';
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    handleFinish();
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            petDisplay.textContent = '😴';
+            petDisplay.classList.remove('pulse');
+            statusText.textContent = 'Paused';
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeLeft = 25 * 60;
+            updateDisplay();
+            petDisplay.textContent = '😴';
+            petDisplay.classList.remove('pulse');
+            statusText.textContent = 'Zzz... Sleeping';
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+
+        function handleFinish() {
+            petDisplay.textContent = '🥳';
+            petDisplay.classList.remove('pulse');
+            statusText.textContent = 'Great Job!';
+            finishSound.play();
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+
+        // To Do List Logic
+        const todoInput = document.getElementById('todo-input');
+        const todoList = document.getElementById('todo-list');
+        let todos = JSON.parse(localStorage.getItem('focus_todos')) || [];
+
+        function renderTodos() {
+            todoList.innerHTML = '';
+            todos.forEach((todo, index) => {
+                const li = document.createElement('li');
+                li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                li.textContent = todo.text;
+                li.onclick = () => toggleTodo(index);
+                todoList.appendChild(li);
+            });
+            localStorage.setItem('focus_todos', JSON.stringify(todos));
+        }
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text) {
+                todos.push({ text, completed: false });
+                todoInput.value = '';
+                renderTodos();
+            }
+        }
+
+        function toggleTodo(index) {
+            todos[index].completed = !todos[index].completed;
+            renderTodos();
+        }
+
+        function clearTodos() {
+            if(confirm("Clear all tasks?")) {
+                todos = [];
+                renderTodos();
+            }
+        }
+
+        // Allow 'Enter' key to add tasks
+        todoInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+
+        // Initial render
+        renderTodos();
+    </script>
+</body>
+</html>
