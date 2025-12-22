@@ -86,31 +86,38 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background-image: url('bg.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+
+   /* * NEW Background Image Styling 
+     * Assuming bg.jpg is in the same folder 
+     */
+    background-image: url('bg.jpg'); /* 1. Set the image source */
+    background-size: cover;          /* 2. Scale image to cover the entire card */
+    background-position: center;     /* 3. Center the image */
+    background-repeat: no-repeat;    /* 4. Ensure image doesn't tile */
 
         .profile-info h1,
         .card-profile .card-title,
         .card-profile .profile-info .tagline {
+            /* Override global/card specific dark colors */
             color: #ffffff !important; 
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Added shadow for readability */
         }
 
         .profile-info p {
-            color: #dddddd;
+            color: #dddddd; /* Lighter grey for secondary text */
         }
 
         .card-profile .social-links a {
-            color: #a0dfff !important;
+            color: #a0dfff !important; /* Bright link color */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
         }
         
+        /* Ensure the Accent Blue link is still unique (use a bright contrast) */
         .card-profile .social-links a.accent-color {
              color: #ffcc00 !important; 
         }
+
+        /* --- Rest of the card styles remain the same --- */
 
         .profile-info .tagline {
             font-size: 1.1rem;
@@ -156,30 +163,12 @@
             border-left: 3px solid var(--accent-blue);
         }
 
-        /* Card 4 (Case Study with App Button) */
+        /* Card 4 (Case Study) */
         .case-study-title {
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--dark-text);
             margin-bottom: 10px;
-        }
-
-        .app-button {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: var(--accent-blue);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .app-button:hover {
-            background-color: #003d80;
-            transform: translateY(-2px);
         }
         
         /* Card 6 (Playlist) */
@@ -253,7 +242,6 @@
                 <div class="card-content">
                     <p class="case-study-title accent-color">**Starch Gelatinization** in Local Kuih</p>
                     <p>Project Description: Analyzing **texture profiles** and thermal properties of various starch sources used in making local delicacy, *Kuih Lapis*.</p>
-                    <a href="https://s80574-cmd.github.io/focus-timer-app/app.html" target="_blank" class="app-button">Try My Focus Timer App</a>
                 </div>
             </div>
 
@@ -284,9 +272,14 @@
     </div>
 
     <script>
+        /**
+         * Function to update the time display dynamically.
+         * Target: Kuala Terengganu/Kuala Nerus (GMT+8).
+         */
         function updateTime() {
             const timeElement = document.getElementById('local-time');
             if (timeElement) {
+                // Use Malaysia Timezone (Asia/Kuala_Lumpur) for accurate local time
                 const options = {
                     timeZone: 'Asia/Kuala_Lumpur',
                     hour: 'numeric',
@@ -299,9 +292,14 @@
                 timeElement.textContent = timeString;
             }
         }
+
+        // Run the function immediately and then every second (1000ms)
         updateTime();
         setInterval(updateTime, 1000);
+        
+        // Update the time display immediately upon page load to show the current time
         document.addEventListener('DOMContentLoaded', updateTime);
+
     </script>
 
 </body>
